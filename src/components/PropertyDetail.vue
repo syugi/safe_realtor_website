@@ -34,9 +34,6 @@
           <v-btn color="error" @click="deleteProperty">삭제</v-btn>
         </v-card-actions>
       </v-card>
-  
-      <!-- 문의하기 버튼 -->
-      <v-btn color="success" block @click="inquireProperty">문의하기</v-btn>
     </v-container>
   </template>
   
