@@ -1,4 +1,7 @@
 import axios from 'axios';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 // API 기본 설정
 const api = axios.create({
@@ -27,16 +30,29 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // 액세스 토큰이 만료된 경우
+    // 서버 연결 실패 또는 네트워크 에러 처리
+    if (error.message === 'Network Error' || !error.response) {
+      alert('서버에 연결할 수 없습니다. 인터넷 연결을 확인해 주세요.');
+      return Promise.reject(error);
+    }
+
+    // 401 에러 처리: 액세스 토큰 만료 시 리프레시 토큰을 사용해 재발급
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
         // 리프레시 토큰 요청
         const refreshToken = localStorage.getItem('refreshToken');
         const userId = localStorage.getItem('userId');
+
+        // 리프레시 토큰이 없다면 로그인 페이지로 리다이렉트
+        if (!refreshToken || !userId) {
+          await router.push('/login');
+          return Promise.reject(error);
+        }
+
         const response = await api.post('/api/auth/refreshToken', {
-            userId,
-            refreshToken,
+          userId,
+          refreshToken,
         });
 
         // 새로운 액세스 토큰 저장
@@ -47,8 +63,19 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (err) {
         console.error('토큰 갱신 실패', err);
+        alert('세션이 만료되었습니다. 다시 로그인해 주세요.');
+        await router.push('/login');
         return Promise.reject(error);
       }
+    }
+
+    // 기타 에러 처리: 에러 응답이 있는 경우
+    if (error.response && error.response.data) {
+      const { code, message } = error.response.data;
+      alert(`Error ${code}: ${message}`); // 에러 코드를 포함한 에러 메시지를 alert로 표시
+    } else {
+      // 예기치 않은 에러 메시지
+      alert('알 수 없는 오류가 발생했습니다.');
     }
 
     return Promise.reject(error);
