@@ -193,7 +193,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import api from '/src/axios-interceptor';
 
 export default {
   data() {
@@ -291,15 +291,7 @@ export default {
       }
 
       try {
-        const response = await axios.post(
-          `${import.meta.env.VITE_API_URL}/api/properties/register`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        const response = await api.post('/api/properties/register', formData);
         if (response.status === 201) {
           alert("매물 등록 성공!");
           this.$router.push("/properties");

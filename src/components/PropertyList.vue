@@ -43,7 +43,7 @@
 </template>
   
 <script>
-import axios from 'axios';
+import api from '/src/axios-interceptor';
 
 export default {
   data() {
@@ -60,7 +60,7 @@ export default {
     // 매물 목록 가져오기 (페이징 처리)
     async fetchProperties() {
       try {
-        const response = await axios.get('http://192.168.0.19:8080/api/properties/realtor', {
+        const response = await api.get('/api/properties/realtor', {
           params: {
             page: this.currentPage,
             perPage: this.perPage,
@@ -85,7 +85,7 @@ export default {
     async deleteProperty(id) {
       if (confirm('정말로 이 매물을 삭제하시겠습니까?')) {
         try {
-          await axios.delete(`${import.meta.env.VITE_API_URL}/api/properties/${id}`);
+          await api.delete(`/api/properties/${id}`);
           this.fetchProperties();  // 삭제 후 목록을 다시 불러옴
         } catch (error) {
           console.error('Failed to delete property', error);

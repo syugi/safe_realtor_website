@@ -60,46 +60,45 @@
   </template>
   
   <script>
-  import axios from 'axios';
+  import { ref, onMounted } from 'vue';
+  import api from '/src/axios-interceptor';
   
   export default {
-    data() {
-      return {
-        activeTab: 0,  // 탭 상태 관리
-        admins: [],    // 관리자 목록
-        agents: [],    // 중개사 목록
-        users: [],     // 일반 회원 목록
-      };
-    },
-    methods: {
+    setup() {
+      const activeTab = ref(0);
+      const admins = ref([]);
+      const agents = ref([]);
+      const users = ref([]);
+  
       // 데이터 가져오기 (관리자, 중개사, 일반 회원 목록)
-      async fetchUserLists() {
-        const token = localStorage.getItem('accessToken');
+      const fetchUserLists = async () => {
         try {
           // 관리자 목록 조회
-          const adminResponse = await axios.get(`${import.meta.env.VITE_API_URL}/api/users/admins`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          this.admins = adminResponse.data;
+          const adminResponse = await api.get('/api/users/admins');
+          admins.value = adminResponse.data;
   
           // 중개사 목록 조회
-          const agentResponse = await axios.get(`${import.meta.env.VITE_API_URL}/api/users/agents`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          this.agents = agentResponse.data;
+          const agentResponse = await api.get('/api/users/agents');
+          agents.value = agentResponse.data;
   
           // 일반 회원 목록 조회
-          const userResponse = await axios.get(`${import.meta.env.VITE_API_URL}/api/users/members`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          this.users = userResponse.data;
+          const userResponse = await api.get('/api/users/members');
+          users.value = userResponse.data;
         } catch (error) {
           console.error('Failed to fetch user lists', error);
         }
-      },
-    },
-    mounted() {
-      this.fetchUserLists();  // 컴포넌트 로드 시 데이터 가져오기
+      };
+  
+      onMounted(() => {
+        fetchUserLists(); // 컴포넌트 로드 시 데이터 가져오기
+      });
+  
+      return {
+        activeTab,
+        admins,
+        agents,
+        users,
+      };
     },
   };
   </script>

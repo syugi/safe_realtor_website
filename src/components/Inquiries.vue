@@ -40,7 +40,7 @@
   </template>
   
   <script>
-  import axios from 'axios';
+  import api from '/src/axios-interceptor';
   
   export default {
     data() {
@@ -56,11 +56,7 @@
           const token = localStorage.getItem('accessToken');
   
           // API 요청 시 Authorization 헤더에 토큰 추가
-          const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/inquiry/list`, {
-            headers: {
-              Authorization: `Bearer ${token}`, // Bearer 토큰 형식으로 추가
-            },
-          });
+          const response = await api.get('/api/inquiry/list');
   
           // 각 문의에 showDetail 속성 추가 (상세 요청사항 보기/숨기기 토글용)
           this.inquiries = response.data.map(inquiry => ({

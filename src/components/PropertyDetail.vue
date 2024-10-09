@@ -41,7 +41,7 @@
   </template>
   
   <script>
-  import axios from 'axios';
+  import api from '/src/axios-interceptor';
   
   export default {
     data() {
@@ -53,7 +53,7 @@
     methods: {
       async fetchProperty() {
         try {
-          const response = await axios.get(`http://192.168.0.19:8080/api/properties/${this.$route.params.id}`);
+          const response = await api.get(`/api/properties/${this.$route.params.id}`);
           this.property = response.data;
         } catch (error) {
           console.error('매물 정보를 가져오는데 실패했습니다', error);
@@ -70,7 +70,7 @@
       async deleteProperty() {
         if (confirm('정말로 이 매물을 삭제하시겠습니까?')) {
           try {
-            await axios.delete(`${import.meta.env.VITE_API_URL}/api/properties/${this.property.id}`);
+            await api.delete(`/api/properties/${this.property.id}`);
             this.$router.push('/properties');
           } catch (error) {
             console.error('매물을 삭제하는데 실패했습니다', error);
