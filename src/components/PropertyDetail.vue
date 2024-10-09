@@ -60,7 +60,7 @@
         }
       },
       canEdit() {
-        return this.userRole === 'ROLE_AGENT' || this.userRole === 'ROLE_ADMIN';
+        return this.userRole === 'ROLE_AGENT';
       },
       // 매물 수정 페이지로 이동
       editProperty() {
