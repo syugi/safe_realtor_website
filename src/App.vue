@@ -1,20 +1,32 @@
 <template>
   <v-app>
-    <!-- 로그인 페이지가 아닌 경우에만 네비게이션 드로어를 보여줌 -->
-    <v-navigation-drawer v-if="!isLoginPage" app v-model="drawer" permanent>
+    <v-app-bar app>
+      <!-- 햄버거 메뉴 버튼 (모바일에서만 보임) -->
+      <v-app-bar-nav-icon @click="drawer = !drawer" v-if="!isLoginPage"></v-app-bar-nav-icon>
+      <v-toolbar-title>부동산 앱</v-toolbar-title>
+    </v-app-bar>
+
+    <!-- 네비게이션 드로어 -->
+    <v-navigation-drawer
+      v-if="!isLoginPage"
+      v-model="drawer"
+      app
+      temporary
+      mobile-break-point="1024"
+    >
       <v-list>
         <!-- 사용자 정보 표시 -->
-        <v-list-item>
+        <v-list-item v-if="userId">
           <v-list-item-title>
             {{ userId }} ({{ roleDisplayName }})
           </v-list-item-title>
         </v-list-item>
 
-        <v-divider></v-divider>
+        <v-divider v-if="userId"></v-divider>
 
         <!-- 매물 조회 -->
         <v-list-item v-if="canViewProperties" @click="navigateWithPermission(canViewProperties, '/properties')">
-          <v-list-item-title>매물 조회</v-list-item-title>
+          <v-list-item-title>홈</v-list-item-title>
         </v-list-item>
 
         <!-- 문의 내역 -->
@@ -50,7 +62,7 @@ import { userId, role, roleDisplayName, logout, loadUserInfo } from '/src/auth';
 
 export default {
   setup() {
-    const drawer = ref(true);
+    const drawer = ref(false); // 초기에는 드로어를 숨김 상태로 설정
     const router = useRouter();
     const route = useRoute();
 
@@ -60,7 +72,7 @@ export default {
     // 로그인 페이지인지 확인하는 계산된 속성
     const isLoginPage = computed(() => route.path === '/login');
 
-     // 권한에 따른 메뉴 표시 설정
+    // 권한에 따른 메뉴 표시 설정
     const canViewProperties = computed(() => isLoggedIn.value);
     const canViewInquiries = computed(() => role.value === 'ROLE_AGENT' || role.value === 'ROLE_ADMIN');
     const canManageUsers = computed(() => role.value === 'ROLE_ADMIN');

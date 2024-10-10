@@ -27,8 +27,8 @@
 
     <!-- 매물 정보 입력 -->
     <v-text-field v-model="form.title" label="제목" outlined required></v-text-field>
-    <v-text-field v-model="form.price" label="가격" outlined type="number" required></v-text-field>
-    <v-textarea v-model="form.description" label="소개" outlined required></v-textarea>
+    <v-text-field v-model="form.price" label="가격 (보증금/월세)" outlined required></v-text-field>
+    <v-textarea v-model="form.description" label="매물 설명" outlined required></v-textarea>
 
     <!-- 종류 선택 -->
     <v-select
@@ -44,7 +44,6 @@
       v-model="form.maintenanceFee"
       label="관리비"
       outlined
-      type="number"
     ></v-text-field>
 
     <!-- 주차 가능 여부 -->
@@ -63,10 +62,10 @@
     <v-text-field v-model="form.area" label="전용면적 (㎡)" outlined type="number"></v-text-field>
 
     <!-- 방수 -->
-    <v-text-field v-model="form.rooms" label="방수" outlined type="number"></v-text-field>
+    <v-text-field v-model="form.rooms" label="방수"></v-text-field>
 
     <!-- 욕실수 -->
-    <v-text-field v-model="form.bathrooms" label="욕실수" outlined type="number"></v-text-field>
+    <v-text-field v-model="form.bathrooms" label="욕실수" ></v-text-field>
 
     <!-- 방향 -->
     <v-text-field v-model="form.direction" label="방향" outlined></v-text-field>
@@ -78,13 +77,13 @@
     <v-switch v-model="form.elevatorAvailable" label="엘리베이터 여부"></v-switch>
 
     <!-- 총 주차대수 -->
-    <v-text-field v-model="form.totalParkingSlots" label="총 주차대수" outlined type="number"></v-text-field>
+    <v-text-field v-model="form.totalParkingSlots" label="총 주차대수"></v-text-field>
 
     <!-- 현관 유형 -->
     <v-text-field v-model="form.entranceType" label="현관 유형" outlined></v-text-field>
 
     <!-- 입주 가능일 -->
-    <v-text-field v-model="form.availableMoveInDate" label="입주 가능일" outlined type="date"></v-text-field>
+    <v-text-field v-model="form.availableMoveInDate" label="입주 가능일"></v-text-field>
 
     <!-- 건축물 용도 -->
     <v-text-field v-model="form.buildingUse" label="건축물 용도" outlined></v-text-field>
@@ -99,7 +98,7 @@
     <v-textarea v-model="form.options" label="옵션" outlined></v-textarea>
 
     <!-- 보안/안전 시설 -->
-    <v-textarea v-model="form.securityFacilities" label="보안/안전 시설" outlined></v-textarea>
+    <v-text-field v-model="form.securityFacilities" label="보안/안전 시설" outlined></v-text-field>
 
     <!-- 등록/수정 버튼 -->
     <v-btn color="primary" @click="saveProperty">
