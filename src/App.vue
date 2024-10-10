@@ -2,8 +2,8 @@
   <v-app>
     <v-app-bar app>
       <!-- 햄버거 메뉴 버튼 (모바일에서만 보임) -->
-      <v-app-bar-nav-icon @click="drawer = !drawer" v-if="!isLoginPage"></v-app-bar-nav-icon>
-      <v-toolbar-title>부동산 앱</v-toolbar-title>
+      <v-app-bar-nav-icon v-if="isMobile" @click="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-toolbar-title>안전부동산 '안부'</v-toolbar-title>
     </v-app-bar>
 
     <!-- 네비게이션 드로어 -->
@@ -11,8 +11,7 @@
       v-if="!isLoginPage"
       v-model="drawer"
       app
-      temporary
-      mobile-break-point="1024"
+      :temporary="isMobile"  
     >
       <v-list>
         <!-- 사용자 정보 표시 -->
@@ -26,7 +25,7 @@
 
         <!-- 매물 조회 -->
         <v-list-item v-if="canViewProperties" @click="navigateWithPermission(canViewProperties, '/properties')">
-          <v-list-item-title>홈</v-list-item-title>
+          <v-list-item-title>매물 조회</v-list-item-title>
         </v-list-item>
 
         <!-- 문의 내역 -->
@@ -62,9 +61,12 @@ import { userId, role, roleDisplayName, logout, loadUserInfo } from '/src/auth';
 
 export default {
   setup() {
-    const drawer = ref(false); // 초기에는 드로어를 숨김 상태로 설정
+    const drawer = ref(true);
     const router = useRouter();
     const route = useRoute();
+
+    // 모바일 화면 여부를 감지하는 계산된 속성
+    const isMobile = computed(() => window.innerWidth < 1024);
 
     // 로그인 여부
     const isLoggedIn = computed(() => !!localStorage.getItem('accessToken'));
@@ -96,6 +98,11 @@ export default {
 
     onMounted(() => {
       loadUserInfo();
+
+      // 창 크기가 변경될 때 isMobile 다시 계산
+      window.addEventListener('resize', () => {
+        isMobile.value = window.innerWidth < 1024;      
+      });
     });
 
     return {
@@ -110,6 +117,7 @@ export default {
       canManageUsers,
       confirmLogout,
       navigateWithPermission,
+      isMobile,
     };
   },
 };
