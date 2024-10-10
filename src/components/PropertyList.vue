@@ -60,15 +60,14 @@ export default {
     // 매물 목록 가져오기 (페이징 처리)
     async fetchProperties() {
       try {
-        const response = await api.get('/api/properties/realtor', {
+        const response = await api.get('/api/properties/list', {
           params: {
             page: this.currentPage,
             perPage: this.perPage,
           }
         });
-        this.properties = response.data.properties;  // 실제 매물 목록 데이터
+        this.properties = response.data.items;  // 실제 매물 목록 데이터
         this.totalPages = response.data.totalPages;  // 전체 페이지 수
-        console.log(this.properties);
       } catch (error) {
         console.error('Failed to fetch properties', error);
       }

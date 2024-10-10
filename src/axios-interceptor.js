@@ -1,7 +1,5 @@
 import axios from 'axios';
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
+import router from '/src/router';
 
 // API 기본 설정
 const api = axios.create({
@@ -38,6 +36,7 @@ api.interceptors.response.use(
 
     // 401 에러 처리: 액세스 토큰 만료 시 리프레시 토큰을 사용해 재발급
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
+        console.log("리프레시 토큰 요청하러가자!");
       originalRequest._retry = true;
       try {
         // 리프레시 토큰 요청
@@ -54,6 +53,7 @@ api.interceptors.response.use(
           userId,
           refreshToken,
         });
+        console.log("리프레시 토큰 결과 여기로오나 ! "+response.data);
 
         // 새로운 액세스 토큰 저장
         localStorage.setItem('accessToken', response.data.accessToken);
@@ -65,14 +65,17 @@ api.interceptors.response.use(
         console.error('토큰 갱신 실패', err);
         alert('세션이 만료되었습니다. 다시 로그인해 주세요.');
         await router.push('/login');
-        return Promise.reject(error);
+        return Promise.reject(err);
       }
     }
 
     // 기타 에러 처리: 에러 응답이 있는 경우
     if (error.response && error.response.data) {
       const { code, message } = error.response.data;
-      alert(`Error ${code}: ${message}`); // 에러 코드를 포함한 에러 메시지를 alert로 표시
+
+      if(code != 'INVALID_REFRESH_TOKEN'){
+        alert(`Error ${code}: ${message}`); // 에러 코드를 포함한 에러 메시지를 alert로 표시
+      }
     } else {
       // 예기치 않은 에러 메시지
       alert('알 수 없는 오류가 발생했습니다.');
