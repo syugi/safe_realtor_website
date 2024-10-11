@@ -3,7 +3,7 @@
     <v-app-bar app>
       <!-- 햄버거 메뉴 버튼 (모바일에서만 보임) -->
       <v-app-bar-nav-icon v-if="isMobile" @click="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>안전부동산 '안부'</v-toolbar-title>
+      <v-toolbar-title>안부</v-toolbar-title>
     </v-app-bar>
 
     <!-- 네비게이션 드로어 -->
